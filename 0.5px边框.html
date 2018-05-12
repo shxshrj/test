@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style>
+		.container{
+                width: 500px;
+                margin: 0px auto;
+            }
+            .border-scale{
+                position:relative;
+                padding: 10px;
+                border: 0.5px solid blue;
+                border-bottom: 0px solid blue;
+            }
+
+            .border-scale:after{
+                 content: "  ";
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index:-1;
+                width: 200%;
+                height:200%;
+                border:1px solid #f00;
+                -webkit-transform-origin: 0 0;
+                transform-origin: 0 0;
+                -webkit-transform: scale(.5, .5);
+                transform: scale(.5, .5);
+                border-radius: 10px;
+            }</style>
+	</head>
+	<body>
+		<div class="container">
+            <h3>方案二：使用缩放</h3>
+            <div class="border-scale">
+               原理： 在Y轴方向上，压缩一半。 
+            </div>
+        </div>
+	</body>
+</html>

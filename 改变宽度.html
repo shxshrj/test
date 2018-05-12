@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.div{
+				width:100px;
+				height:100px;
+				background:yellow;
+			}
+			.div1{
+				height: 300px;
+				
+				animation:myfirst 2s;
+				-moz-animation:myfirst 2s; /* Firefox */
+				-webkit-animation:myfirst 2s; /* Safari and Chrome */
+				-o-animation:myfirst 2s; /* Opera */
+			}
+			.div2{
+				height: 100px;
+				
+				animation:myfirst1 2s;
+				-moz-animation:myfirst1 2s; /* Firefox */
+				-webkit-animation:myfirst1 2s; /* Safari and Chrome */
+				-o-animation:myfirst1 2s; /* Opera */
+			}
+			@keyframes myfirst
+			{
+			from {height:100px;}
+			to {height:300px;}
+			}
+			
+			@-moz-keyframes myfirst /* Firefox */
+			{
+			from {height:100px;}
+			to {height:300px;}
+			}
+			
+			@-webkit-keyframes myfirst /* Safari and Chrome */
+			{
+			from {height:100px;}
+			to {height:300px;}
+			}
+			
+			@-o-keyframes myfirst /* Opera */
+			{
+			from {height:100px;}
+			to {height:300px;}
+			}
+			@keyframes myfirst1
+			{
+			from {height:300px;}
+			to {height:100px;}
+			}
+			
+			@-moz-keyframes myfirst1 /* Firefox */
+			{
+			from {height:300px;}
+			to {height:100px;}
+			}
+			
+			@-webkit-keyframes myfirst1 /* Safari and Chrome */
+			{
+			from {height:300px;}
+			to {height:100px;}
+			}
+			
+			@-o-keyframes myfirst1 /* Opera */
+			{
+			from {height:300px;}
+			to {height:100px;}
+			}
+		</style>
+		<script src="js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#button").click(function(){
+					$("#div1").addClass("div1").removeClass("div2");
+					$("#button1").show()
+					$("#button").hide()
+				})
+				$("#button1").click(function(){
+					$(this).hide()
+					$("#button").show()
+					$("#div1").removeClass("div1").addClass("div2")
+				})
+			})
+		</script>
+	</head>
+	<body>
+		<button id="button">点击</button>
+		<button id="button1">点击1</button>
+		<div id="div1" class="div">
+			
+		</div>
+	</body>
+</html>
