@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript">
+		
+			function callback(tp) {
+            var obj = document.getElementById("txtContent");
+            obj.value = obj.value + tp;
+            obj.focus();
+            var len = obj.value.length;
+            if (document.selection) {
+                var sel = obj.createTextRange();
+                sel.moveStart('character', len);
+                sel.collapse();
+                sel.select();
+            } else if (typeof obj.selectionStart == 'number'
+            && typeof obj.selectionEnd == 'number') {
+                obj.selectionStart = obj.selectionEnd = len;
+            }
+        }
+		</script>
+	</head>
+	<body>
+		<input type="text" name="txtContent" id="txtContent" onfocus="callback('dddd')" value="dddd" />
+		<img src="" alt="img/banner.png"/>
+		<img src="http://172.95.65.131:9080/image/download/ptnPVSd8Su-bcLVRkdpL3g"/>
+	</body>
+</html>

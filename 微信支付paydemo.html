@@ -1,0 +1,164 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta content="telephone=no" name="format-detection" />
+<title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"> </script>
+<script>
+var myDate = new Date();
+var time = String(myDate.getTime());
+var timestamp = time.substring(0,10);//时间戳	
+var noncestr = 'Wm3WZYTPz0wzCCnW';//随机字符串 需要前端随机生成
+var sign = '';
+var appid = '';
+var str = window.location.pathname;
+var index = str .lastIndexOf("\/");  
+str  = str .substring(0,(index + 1));
+var openid = 'oqGqqv4jjfzpmPRNUoMkKVDC7njk';
+var orderid = '';
+
+$(document).ready(function(){	
+	
+	$.ajax({
+        cache: true,
+        type: "GET",
+        url:str+"/wxpay/getJsApiSignature",
+        data:"timestamp="+timestamp+"&noncestr="+noncestr+"&orderid="+orderid,// 你的formid
+        async: false,
+        error: function(request) {
+            alert("Connection error");                    
+        },
+        success: function(data) {
+    		// window.location.href = ctx+'/emp/salary?empid='+ '${empid}'<#if isedit ??> +'&isedit=Y'</#if>;    		
+        	sign = data.jsondata.sign;
+        	appid = data.jsondata.appid;
+        }
+    });
+	
+	
+	
+	 wx.config({
+	      debug: true,
+	      appId: appid,
+	      timestamp: timestamp,
+	      nonceStr: noncestr,
+	      signature: sign,
+	      jsApiList: [
+	        'chooseWXPay'       
+	      ]
+	  });	
+	 
+	 
+		wx.ready(function () {
+		  // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
+		  document.querySelector('#checkJsApi').onclick = function () {
+		    wx.checkJsApi({
+		      jsApiList: [
+		        'chooseWXPay'
+		      ],
+		      success: function (res) {
+		        alert(JSON.stringify(res));
+		      }
+		    });
+		  };
+	
+	})
+
+ 
+ 
+	  
+	  document.querySelector('#chooseWXPay').onclick = function () {
+		  
+		  var ptimestamp = '';
+		  var pnonceStr = '';
+		  var ppackage = '';
+		  var signType = 'MD5';
+		  var paySign = '';		  
+		 
+			$.ajax({
+		        cache: true,
+		        type: "GET",
+		        url:str+"/wxpay/getPaySign?openId="+openid+"&orderId="+timestamp ,//需要传送订单号和openid 这边先用时间戳代替订单号	        
+		        async: false,
+		        error: function(request) {
+		            alert("Connection error");                    
+		        },
+		        success: function(data) {	
+		        	if(data.code=='SUCCESS'){
+			        	ptimestamp = data.jsondata.timeStamp;
+			        	pnonceStr = data.jsondata.nonceStr;
+			        	ppackage = data.jsondata.package;
+			        	paySign = data.jsondata.sign;
+			        	signType = data.jsondata.signType;
+		        	}
+		        	else{
+		        		alert(data.message);
+		        		return;
+		        	}
+		        }
+		    });
+		  
+		//alert( ptimestamp + " | " + pnonceStr + " | " + ppackage + " | " + paySign + " | " + appid );
+		    wx.chooseWXPay({
+		      appId: appid,
+		      timestamp: ptimestamp,
+		      nonceStr: pnonceStr,
+		      package: ppackage,
+		      signType: signType,
+		      paySign: paySign,
+		      success: function (res) {
+		          // 支付成功后的回调函数 errMsg = chooseWXPay:ok时候为支付成功		          		         
+		          if(res.errMsg == 'chooseWXPay:ok'){
+					$.ajax({
+				        cache: true,
+				        type: "GET",
+				        url:str+"/wxpay/WxPayResult?orderId="+timestamp ,//需要传送订单号和openid 这边先用时间戳代替订单号	        
+				        async: false,
+				        error: function(request) {
+				            alert("Connection error");                    
+				        },
+				        success: function(data) {	
+				        	if(data.code=='SUCCESS'){
+				        		//支付成功
+				        		 alert('支付成功');				        		 
+				        	}
+				        	else{
+				        		//支付失败提示
+				        		 alert(data.message);
+				        	}
+				        }
+				    });
+		          }
+		          else{
+		        		//支付失败提示
+		        	  alert('抱歉支付失败');
+		          }
+		      }
+		    });
+		    
+		  };
+	  
+	});
+
+	wx.error(function (res) {
+	  alert(res.errMsg);
+	});
+</script>
+</head>
+<body>
+
+this is a WXPAY demo
+<br>
+
+<button class="btn btn_primary" id="checkJsApi">测试手机版本是否api的支持</button>
+
+<br>
+
+<button class="btn btn_primary" id="chooseWXPay">支付0.01元</button>
+</body>
+</html>
